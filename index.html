@@ -1,0 +1,132 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1E3799;
+            font-family: Helvetica;
+            user-select: none;
+            /*禁止鼠标选中*/
+        }
+        .calculator {
+            display: grid;
+            grid-template-areas: "result result result result"
+                "ac plus-minus percent divide"
+                "number_7 number_8 number_9 multiply"
+                "number_4 number_5 number_6 subtract"
+                "number_1 number_2 number_3 add"
+                "number_0 number_0 decimal_point equal";
+            grid-template-columns: repeat(4, 80px);
+            grid-template-rows: repeat(6, 80px);
+        }
+        .calculator button {
+            font-size: 24px;
+            font-weight: normal;
+            margin: 10px;
+            outline: none;
+            color: #FFC000;
+            border: 0;
+            border-radius: 40px;
+            background: #1E3799;
+            box-shadow: -4px -4px 10px -8px rgba(255, 255, 255, 1),
+                4px 4px 10px -8px rgba(0, 0, 0, .3);
+        }
+        .calculator button:active {
+            box-shadow: -4px -4px 10px -8px rgba(255, 255, 255, 1) inset,
+                4px 4px 10px -8px rgba(0, 0, 0, .3) inset;
+        }
+        .result {
+            font-size: 48px;
+            color: #FFC000;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="calculator">
+            <div id="result" class="result" style="grid-area: result">
+            </div>
+            <button style="grid-area: ac">AC</button>
+            <button style="grid-area: plus-minus">±</button>
+            <button style="grid-area: percent">%</button>
+            <button style="grid-area: add">+</button>
+            <button style="grid-area: subtract">-</button>
+            <button style="grid-area: multiply">×</button>
+            <button style="grid-area: divide">/</button>
+            <button style="grid-area: equal">=</button>
+            <button style="grid-area: number_1">1</button>
+            <button style="grid-area: number_2">2</button>
+            <button style="grid-area: number_3">3</button>
+            <button style="grid-area: number_4">4</button>
+            <button style="grid-area: number_5">5</button>
+            <button style="grid-area: number_6">6</button>
+            <button style="grid-area: number_7">7</button>
+            <button style="grid-area: number_8">8</button>
+            <button style="grid-area: number_9">9</button>
+            <button style="grid-area: number_0">0</button>
+            <button style="grid-area: decimal_point">.</button>
+        </div>
+    </div>
+    <script>
+        //按钮
+        var button = document.getElementsByTagName("button");
+        //数字
+        var number = [button[8], button[9], button[10], button[11], button[12], button[13], button[14], button[15],
+            button[16], button[17], button[18]
+        ];
+        //操作符
+        var option = [button[1], button[2], button[3], button[4], button[5], button[6]];
+        //展示框
+        var result = document.getElementById("result");
+        //归零
+        var clean = button[0];
+        //获取等号
+        var equal = button[7];
+        //声明用于保存内容的三个变量
+        var number_value = "0"; //存储数字
+        var option_value = ""; //存储操作符
+        var number_temp = ""; //存储暂存值
+        function input() {
+            result.innerHTML = number_temp + option_value + number_value;
+            for (var i = 0; i < number.length - 1; i++) {
+                number[i].i = i;
+                number[i].onclick = function () {
+                    if (number_value == "0") {
+                        number_value = "";
+                    }
+                    number_value += this.innerHTML;
+                    input();
+                }
+            }
+            for (var i = 0; i < option.length; i++) {
+                option[i].i = i;
+                option[i].onclick = function () {
+                    number_temp = number_value;
+                    option_value = this.innerHTML;
+                    number_value = "";
+                }
+            }
+        }
+        input();
+        Calculation();
+        function Calculation() {
+            equal.onclick = function () {
+                result.innerHTML = eval(number_value + option_value + number_temp);
+            }
+        }
+        clean_value();
+        function clean_value() {
+            clean.onclick = function () {
+                number_value="";
+                number_temp="";
+                option_value="";
+                result.innerHTML = "0";
+            }
+        }
+    </script>
+</body>
